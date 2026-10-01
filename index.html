@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7f8fc">
+  <title>Цифровой детектив — Своя игра</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" id="homeLink"><span class="brand-mark">✦</span> цифровой детектив</a>
+    <div class="top-actions">
+      <span class="tag">ИНФОРМАТИКА · 9 КЛАСС</span>
+      <button class="icon-btn" id="rulesBtn" aria-label="Правила игры" title="Правила">?</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="startScreen" class="screen start-screen">
+      <div class="hero">
+        <div class="eyebrow"><span class="pulse"></span> ИНТЕРАКТИВНЫЙ УРОК</div>
+        <h1>Проверь, насколько<br><span>ты в цифровом мире.</span></h1>
+        <p class="hero-copy">Выбирайте категории, отвечайте на вопросы и собирайте баллы. Здесь пригодятся знания, логика и внимательность.</p>
+        <div class="start-controls">
+          <label for="teamCount">Количество команд</label>
+          <div class="start-row">
+            <select id="teamCount" aria-label="Количество команд">
+              <option value="2">2 команды</option>
+              <option value="3">3 команды</option>
+              <option value="4">4 команды</option>
+            </select>
+            <button class="primary-btn" id="startBtn">Начать игру <span>→</span></button>
+          </div>
+        </div>
+        <div class="hero-note"><span>✦</span> 6 категорий · 18 вопросов · 100–300 баллов</div>
+      </div>
+      <div class="preview-card">
+        <div class="preview-top"><span>ИГРОВОЕ ПОЛЕ</span><span class="live-dot">● готово к запуску</span></div>
+        <div class="preview-grid">
+          <div class="preview-cell"><span>01</span><b>Сетевой этикет</b><small>100 · 200 · 300</small></div>
+          <div class="preview-cell"><span>02</span><b>Интернет-угрозы</b><small>100 · 200 · 300</small></div>
+          <div class="preview-cell"><span>03</span><b>Цифровая защита</b><small>100 · 200 · 300</small></div>
+          <div class="preview-cell"><span>04</span><b>Ситуации</b><small>100 · 200 · 300</small></div>
+          <div class="preview-cell"><span>05</span><b>Закон и Интернет</b><small>100 · 200 · 300</small></div>
+          <div class="preview-cell"><span>06</span><b>Детектив</b><small>100 · 200 · 300</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen hidden">
+      <div class="game-heading">
+        <div><div class="eyebrow">ИГРОВОЙ РАУНД</div><h2>Выберите вопрос</h2><p>Нажмите на ячейку, чтобы открыть задание.</p></div>
+        <button class="secondary-btn" id="finishBtn">Завершить игру</button>
+      </div>
+      <div class="teams-panel" id="teamsPanel"></div>
+      <div class="board-wrap">
+        <div class="board" id="board"></div>
+      </div>
+      <div class="game-foot"><span><i class="legend-dot"></i> Доступный вопрос</span><span><i class="legend-dot used"></i> Уже сыгран</span></div>
+    </section>
+
+    <section id="resultScreen" class="screen hidden">
+      <div class="result-card">
+        <div class="result-icon">✦</div>
+        <div class="eyebrow">ИГРА ЗАВЕРШЕНА</div>
+        <h2>Раунд пройден!</h2>
+        <p>Вот как распределились баллы.</p>
+        <div id="finalScores" class="final-scores"></div>
+        <button class="primary-btn" id="restartBtn">Сыграть ещё раз <span>↻</span></button>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal hidden" id="questionModal" role="dialog" aria-modal="true" aria-labelledby="questionTitle">
+    <div class="modal-backdrop" data-close="true"></div>
+    <div class="modal-card">
+      <div class="modal-top"><span id="questionCategory" class="category-pill">Категория</span><button class="icon-btn close-btn" id="closeQuestion" aria-label="Закрыть">×</button></div>
+      <div class="question-points" id="questionPoints">100 баллов</div>
+      <h2 id="questionTitle">Вопрос</h2>
+      <div class="answer-box hidden" id="answerBox"><div class="answer-label">ПРАВИЛЬНЫЙ ОТВЕТ</div><p id="answerText"></p><small id="explanationText"></small></div>
+      <div class="modal-controls">
+        <button class="secondary-btn" id="showAnswerBtn">Показать ответ</button>
+        <div class="mark-controls hidden" id="markControls">
+          <label for="teamSelect">Кому засчитать?</label>
+          <select id="teamSelect"></select>
+          <div class="mark-row">
+            <button class="wrong-btn" id="wrongBtn">Не засчитывать</button>
+            <button class="primary-btn" id="correctBtn">Засчитать баллы <span>✓</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="rulesModal" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
+    <div class="modal-backdrop" data-rules-close="true"></div>
+    <div class="modal-card rules-card">
+      <div class="modal-top"><span class="category-pill">КАК ИГРАТЬ</span><button class="icon-btn" id="closeRules" aria-label="Закрыть">×</button></div>
+      <h2 id="rulesTitle">Правила игры</h2>
+      <ol>
+        <li>Разделитесь на команды и по очереди выбирайте категорию и стоимость вопроса.</li>
+        <li>На обсуждение можно отвести 20–30 секунд. Ответ озвучивает представитель команды.</li>
+        <li>Ведущий открывает правильный ответ и отмечает результат.</li>
+        <li>За верный ответ выбранная команда получает баллы. За неверный ответ баллы не начисляются.</li>
+        <li>Каждая ячейка используется только один раз. Побеждает команда с наибольшим количеством баллов.</li>
+      </ol>
+      <p class="rules-note">Ведущий может разрешить другой команде ответить после ошибки первой команды.</p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
